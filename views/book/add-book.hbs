@@ -1,0 +1,62 @@
+<h3>Congratulations, youre trying to make all minds less blurry. I know, title
+  of the app is deceiving, but we are clearing minds that are blurry.
+  :mind-blown:</h3>
+
+<form method="post" action="/book/add">
+  <label for="title">
+    Title
+    <input type="text" id="title" name="title" placeholder="Title" />
+  </label>
+  <br />
+  <label for="description">
+    Description
+    <input
+      type="text"
+      id="description"
+      name="description"
+      placeholder="Describe yo book"
+    />
+  </label>
+  <br />
+  <label for="authors">
+    Author(s) name(s) split by commas
+    <input
+      type="text"
+      id="authors"
+      name="authors"
+      placeholder="Author(s) name(s)"
+    />
+  </label>
+  <br />
+  <label for="year">
+    Publishing Date
+    <input type="number" id="year" name="year" placeholder="When publish?" />
+  </label>
+  <br />
+  <label for="publisher">
+    Publisher
+    <input
+      type="text"
+      id="publisher"
+      name="publisher"
+      placeholder="Publisher name"
+    />
+  </label>
+  <br />
+  <label for="genre">
+    Genre
+    <input type="text" id="genre" name="genre" placeholder="Genre" />
+  </label>
+  <br />
+  <label>
+    NSFW
+    <input type="checkbox" name="nsfw" />
+  </label>
+  <br />
+  <button type="submit">Create yo book</button>
+</form>
+
+{{#if createdBook}}
+  <h4>Thank you for creating
+    <a href="/book/{{createdBook._id}}">{{createdBook.title}}</a></h4>
+{{/if}}

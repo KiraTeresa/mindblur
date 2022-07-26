@@ -28,3 +28,34 @@ Genre
 _id: ObjectId
 title: String|Required|Unique
 
+
+
+<!-- Look into searching book taken the most, currently -->
+GET / Home Page -> Browse for Books? Login? Register? Maybe show most wanted books
+GET /auth/login -> Login and click to go to register if not registered yet
+POST /auth/login
+GET /auth/register -> Register and click to login if user is already registered
+POST /auth/register
+
+GET /search -> List of books that are being searched
+
+GET /book/:bookId -> Single Book Information | If it has genres, show books in the genre | if it has author show books from author
+GET /book/add -> Add a new book to the collection
+POST /book/add
+
+GET /book/:bookId/request
+POST /book/:bookId/request
+
+GET /settings
+GET /settings/update-user
+POST /settings/update-user
+GET /settings/update-password
+POST /settings/update-password
+
+<!-- IF WE HAVE TIME -->
+GET /:username/:bookId -> Rating information
+POST /:username/create-rating
+GET /most-rated
+
+Might have admin access. For us to figure out if we do have time
+Might add dates (when do you have to return it, how long you keep it, etc)

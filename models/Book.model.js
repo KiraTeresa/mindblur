@@ -5,7 +5,7 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  author: {
+  authors: {
     type: [String],
     required: true,
   },
@@ -22,7 +22,12 @@ const BookSchema = new mongoose.Schema({
   year: {
     type: Number,
   },
+  stock: {
+    type: Number,
+    default: 4,
+  },
   //   genre: We look into this whenever we add relationships
+  // if we have time: ratings
 });
 
 const BookModel = mongoose.model("book", BookSchema);
