@@ -3,7 +3,9 @@ const BookModel = require("./models/Book.model");
 
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/mindblur").then((connection) => {
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost/mindblur";
+
+mongoose.connect(MONGO_URL).then((connection) => {
   console.log(
     `Connected to Mongo!! Database name is "${connection.connections[0].name}"`
   );
