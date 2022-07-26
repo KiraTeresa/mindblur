@@ -4,6 +4,10 @@ const BookModel = require("./models/Book.model");
 const mongoose = require("mongoose");
 
 const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost/mindblur";
+// falsy && string -> false
+// truthy && string -> string
+// falsy || string -> string
+// truthy || string -> truthy
 
 mongoose.connect(MONGO_URL).then((connection) => {
   console.log(
@@ -47,6 +51,14 @@ app.post("/book/add", (req, res) => {
       // TODO: Do better error handling
       res.redirect("/");
     });
+});
+
+app.get("/book/:bookId", (req, res) => {
+  const { bookId } = req.params;
+
+  BookModel.findById(bookId).then((book) => {
+    res.render("book/single-book", { book });
+  });
 });
 
 const PORT = process.env.PORT || 3000;
