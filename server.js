@@ -2,17 +2,6 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const BookModel = require("./models/Book.model");
 
-// const salt = bcrypt.genSaltSync(15);
-// console.log("salt:", salt);
-// const password = "cats_are_silent_killers";
-// const hashedPassword = bcrypt.hashSync(password, salt);
-// console.log("hashedPassword:", hashedPassword);
-
-// const tryingToLogINPassword = "dogs_are_silent_killers";
-
-// const isTheSame = bcrypt.compareSync(tryingToLogINPassword, hashedPassword);
-// console.log("isTheSame:", isTheSame);
-
 const mongoose = require("mongoose");
 const UserModel = require("./models/User.model");
 
@@ -42,7 +31,6 @@ app.get("/auth/register", (req, res) => {
 
 app.post("/auth/register", (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
-  console.log("req.body:", req.body);
 
   if (!username) {
     return res.status(400).render("auth/register", {
@@ -89,6 +77,7 @@ app.post("/auth/register", (req, res) => {
       ...req.body,
     });
   }
+
   if (password !== confirmPassword) {
     return res.status(400).render("auth/register", {
       passwordError:
@@ -100,6 +89,7 @@ app.post("/auth/register", (req, res) => {
   UserModel.findOne({ $or: [{ username }, { email }] })
     .then((possibleUser) => {
       // {User document} | null
+      // if possible user is defined (truthy)
       if (possibleUser) {
         return res.render("auth/register", {
           generalError:
@@ -139,6 +129,55 @@ app.post("/auth/register", (req, res) => {
           "Something got royally screwed up. Please try again later",
         ...req.body,
       });
+    });
+});
+
+app.get("/auth/login", (req, res) => {
+  res.render("auth/login");
+});
+
+app.post("/auth/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username) {
+    res.status(400).render("auth/login", {
+      usernameError: "No username provided",
+    });
+    return;
+  }
+
+  if (!password) {
+    return res.status(400).render("auth/login", {
+      passwordError: "No password provided",
+    });
+  }
+
+  UserModel.findOne({ username })
+    .then((possibleUser) => {
+      if (!possibleUser) {
+        return res.status(400).render("auth/login", {
+          generalError: "Wrong credentials",
+        });
+      }
+
+      // Here we know that there is a user
+      const isSamePassword = bcrypt.compareSync(
+        password,
+        possibleUser.password
+      );
+
+      if (!isSamePassword) {
+        return res.status(400).render("auth/login", {
+          generalError: "Wrong credentials",
+        });
+      }
+
+      // the user exists. the password is the same. you must be the right person
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log("Something failed whilst reaching for a user", err);
+      res.status(500).render("auth/login", { generalError: "oopsie daisy" });
     });
 });
 
