@@ -1,7 +1,20 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const BookModel = require("./models/Book.model");
 
+// const salt = bcrypt.genSaltSync(15);
+// console.log("salt:", salt);
+// const password = "cats_are_silent_killers";
+// const hashedPassword = bcrypt.hashSync(password, salt);
+// console.log("hashedPassword:", hashedPassword);
+
+// const tryingToLogINPassword = "dogs_are_silent_killers";
+
+// const isTheSame = bcrypt.compareSync(tryingToLogINPassword, hashedPassword);
+// console.log("isTheSame:", isTheSame);
+
 const mongoose = require("mongoose");
+const UserModel = require("./models/User.model");
 
 const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost/mindblur";
 // falsy && string -> false
@@ -21,6 +34,112 @@ require("./config")(app);
 
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/auth/register", (req, res) => {
+  res.render("auth/register");
+});
+
+app.post("/auth/register", (req, res) => {
+  const { username, email, password, confirmPassword } = req.body;
+  console.log("req.body:", req.body);
+
+  if (!username) {
+    return res.status(400).render("auth/register", {
+      usernameError: "Please add a username",
+      ...req.body,
+    }); // eventuallty show an error
+  }
+
+  if (!email) {
+    return res.status(400).render("auth/register", {
+      emailError: "Please add an email",
+      ...req.body,
+    });
+  }
+
+  if (!password) {
+    return res.status(400).render("auth/register", {
+      passwordError: "Please add a password",
+      ...req.body,
+    });
+  }
+
+  // ideally we should do some validation of emails and password. i wont do it now, we can do later
+
+  if (username.length < 4) {
+    return res.status(400).render("auth/register", {
+      usernameError: "Please choose something with more than 4 characters",
+      ...req.body,
+    });
+  }
+
+  if (!email.includes("@")) {
+    // @email andre@ || @
+    return res.status(400).render("auth/register", {
+      emailError:
+        "Please add, at the very least an @ symbol. We dont ask for THAT much",
+      ...req.body,
+    });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).render("auth/register", {
+      passwordError: "Could you at least pretend like you give a damn?",
+      ...req.body,
+    });
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).render("auth/register", {
+      passwordError:
+        "Could you at least pretend like you give a damn?. Could these AT LEAST be the same? For once?... Could you not? We've been through this... It is written... Are you that dumb? You must be... Otherwise you would have done what we ask you to do... So could you, for once in your miserable life, do what youre told? Thank you",
+      ...req.body,
+    });
+  }
+
+  UserModel.findOne({ $or: [{ username }, { email }] })
+    .then((possibleUser) => {
+      // {User document} | null
+      if (possibleUser) {
+        return res.render("auth/register", {
+          generalError:
+            "Either email or username already taken. Please try a new thing",
+          ...req.body,
+        }); // we know that there is a user already with at least one of those two credentials
+      }
+
+      // 1st - create something called a salt
+      const salt = bcrypt.genSaltSync(15);
+
+      const hashedPassword = bcrypt.hashSync(password, salt);
+
+      UserModel.create({
+        email,
+        username,
+        password: hashedPassword,
+      })
+        .then((createdUser) => {
+          console.log("createdUser:", createdUser);
+          res.redirect("/");
+        })
+        .catch((err) => {
+          console.log("error failing creating a user", err);
+          res.status(500).render("auth/register", {
+            generalError:
+              "Something got royally screwed up. Please try again later",
+            ...req.body,
+          });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      res.status(500).render("auth/register", {
+        generalError:
+          "Something got royally screwed up. Please try again later",
+        ...req.body,
+      });
+    });
 });
 
 // CREATE BOOK
