@@ -15,6 +15,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  booksRented: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "book",
+    },
+  ],
   //   books: We look into this whenever we add relationships
 });
 

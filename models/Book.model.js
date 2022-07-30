@@ -26,6 +26,10 @@ const BookSchema = new mongoose.Schema({
     type: Number,
     default: 4,
   },
+  // rentedBy: {
+  //   type: mongoose.Types.ObjectId,
+  //   ref: "user",
+  // },
   //   genre: We look into this whenever we add relationships
   // if we have time: ratings
 });

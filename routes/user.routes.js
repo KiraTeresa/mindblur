@@ -13,11 +13,13 @@ userRouter.get("/:userId", (req, res) => {
   }
 
   UserModel.findById(req.params.userId)
+    .populate("booksRented")
     .then((possibleUser) => {
       if (!possibleUser) {
         return res.redirect("/");
       }
 
+      console.log("possibleUser:", possibleUser.booksRented);
       res.render("user/personal", {
         user: possibleUser,
         userId: req.params.userId,
