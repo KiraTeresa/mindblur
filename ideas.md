@@ -35,7 +35,8 @@ GET / Home Page -> Browse for Books? Login? Register? Maybe show most wanted boo
 GET /auth/login -> Login and click to go to register if not registered yet
 POST /auth/login
 GET /auth/register -> Register and click to login if user is already registered
-POST /auth/register
+POST /auth/register /user/userId
+GET /user/:userId
 
 GET /search -> List of books that are being searched
 
