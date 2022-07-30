@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const UserModel = require("../models/User.model");
 const isLoggedOut = require("../middleware/isLoggedOut.middleware");
+const isLoggedIn = require("../middleware/isLoggedIn.middleware");
 
 const authRouter = express.Router();
 
@@ -162,6 +163,17 @@ authRouter.post("/login", isLoggedOut, (req, res) => {
       console.log("Something failed whilst reaching for a user", err);
       res.status(500).render("auth/login", { generalError: "oopsie daisy" });
     });
+});
+
+authRouter.get("/logout", isLoggedIn, (req, res) => {
+  req.session.destroy((err) => {
+    res.clearCookie("hello-class");
+    if (err) {
+      return res.status(500).redirect("/");
+    }
+
+    res.redirect("/");
+  });
 });
 
 module.exports = authRouter;
