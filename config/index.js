@@ -10,9 +10,7 @@ function makesConfig(app) {
   app.set("view engine", "hbs");
   app.use(express.urlencoded({ extended: false }));
   app.use(logger("dev"));
-
   app.use(cookieParser());
-
   app.use(
     session({
       name: "hello-class",

@@ -1,13 +1,14 @@
 const { Router } = require("express");
+const isLoggedIn = require("../middleware/isLoggedIn.middleware");
 const BookModel = require("../models/Book.model");
 
 const bookRouter = Router();
 
-bookRouter.get("/add", (req, res) => {
+bookRouter.get("/add", isLoggedIn, (req, res) => {
   res.render("book/add-book");
 });
 
-bookRouter.post("/add", (req, res) => {
+bookRouter.post("/add", isLoggedIn, (req, res) => {
   const { title, description, authors, publisher, genre, nsfw, year } =
     req.body;
 

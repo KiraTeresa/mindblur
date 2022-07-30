@@ -2,24 +2,16 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 
 const UserModel = require("../models/User.model");
+const isLoggedOut = require("../middleware/isLoggedOut.middleware");
 
 const authRouter = express.Router();
 
-function ensureNotLoggedIn(req, res, next) {
-  if (req.session.userId) {
-    // validates wether the user is loggedin
-    return res.redirect(`/user/${req.session.userId}`);
-  }
-
-  next();
-}
-
 // /auth
-authRouter.get("/register", ensureNotLoggedIn, (req, res) => {
+authRouter.get("/register", isLoggedOut, (req, res) => {
   res.render("auth/register");
 });
 
-authRouter.post("/register", ensureNotLoggedIn, (req, res) => {
+authRouter.post("/register", isLoggedOut, (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
   if (!username) {
@@ -122,11 +114,11 @@ authRouter.post("/register", ensureNotLoggedIn, (req, res) => {
     });
 });
 
-authRouter.get("/login", ensureNotLoggedIn, (req, res) => {
+authRouter.get("/login", isLoggedOut, (req, res) => {
   res.render("auth/login");
 });
 
-authRouter.post("/login", ensureNotLoggedIn, (req, res) => {
+authRouter.post("/login", isLoggedOut, (req, res) => {
   const { username, password } = req.body;
 
   if (!username) {

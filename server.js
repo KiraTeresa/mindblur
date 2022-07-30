@@ -6,9 +6,6 @@ const app = express();
 
 require("./config")(app);
 
-// middleware
-
-// /book/123
 const baseRouter = require("./routes/base.routes");
 app.use("/", baseRouter);
 
