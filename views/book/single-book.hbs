@@ -1,6 +1,8 @@
 <h1>{{book.title}}</h1>
 
-<div>
-  Do you want to rent this book? Click
-  <a href="/book/{{book._id}}/request">here!</a>
-</div>
+{{#if isLoggedIn}}
+  <div>
+    Do you want to rent this book? Click
+    <a href="/book/{{book._id}}/request">here!</a>
+  </div>
+{{/if}}
