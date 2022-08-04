@@ -18,6 +18,9 @@ app.use("/book", bookRouter);
 const userRouter = require("./routes/user.routes");
 app.use("/user", userRouter);
 
+const settingsRouter = require("./routes/settings.routes");
+app.use("/settings", settingsRouter);
+
 // CREATE BOOK
 
 const PORT = process.env.PORT || 3000;
