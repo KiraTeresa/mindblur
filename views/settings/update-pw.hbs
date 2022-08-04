@@ -1,0 +1,13 @@
+<h2>Change password for User "{{user.username}}"</h2>
+<form action="/settings/update-password" method="post">
+<label for="current-password">Current Password</label>
+<input type="password" id="current-password">
+
+<label for="new-password">New Password</label>
+<input type="password" id="new-password">
+
+<label for="repeat-password">Repeat Password</label>
+<input type="password" id="repeat-password">
+
+<button type="submit">Update Password</button>
+</form>
